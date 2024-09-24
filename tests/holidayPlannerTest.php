@@ -6,8 +6,9 @@ final class holidayPlannerTest extends TestCase
     private function createValidator(string $startDate = "01.04.2020", string $endDate = "31.3.2021"): holidayValidator {
         $HolidaySeasonStartDate = new DateTimeImmutable($startDate);
         $HolidaySeasonEndDate = new DateTimeImmutable($endDate);
-
-        return new holidayValidator($HolidaySeasonStartDate, $HolidaySeasonEndDate, 50);
+        
+        $holidays = $this->getNationalHolidays();
+        return new holidayValidator($HolidaySeasonStartDate, $HolidaySeasonEndDate, $holidays, [7], 50);
     }
 
     private function getNationalHolidays() {
@@ -35,16 +36,14 @@ final class holidayPlannerTest extends TestCase
     }
     private function getHolidayPlanner(): holidayPlanner {
         $validValidator = $this->createValidator();
-        $holidays = $this->getNationalHolidays();
-        return new holidayPlanner($holidays, $validValidator);
+        return new holidayPlanner($validValidator);
 
 
     }
     public function testValidValidator(): void
     {
         $validValidator = $this->createValidator();
-        $holidays = $this->getNationalHolidays();
-        $holidayPlanner = new holidayPlanner($holidays, $validValidator);
+        $holidayPlanner = new holidayPlanner($validValidator);
 
         $this->assertInstanceOf($this->getHolidayPlanner()::class, $holidayPlanner);
     }
@@ -52,9 +51,8 @@ final class holidayPlannerTest extends TestCase
     {
         $startDate = new DateTimeImmutable("23.4.2021");
         $endDate = new DateTimeImmutable("22.4.2021");
-        $holidays = $this->getNationalHolidays();
         $this->expectException(Throwable::class);
-        $holidayPlanner = new holidayPlanner($holidays, "invalidValidator");
+        $holidayPlanner = new holidayPlanner("invalidValidator");
         $holidays = $holidayPlanner->getHolidaysBetween($startDate, $endDate);
         $this->assertEmpty($holidays);
     }

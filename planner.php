@@ -15,7 +15,8 @@ if(isset($argv[1]) && isset($argv[2])) {
     $startDate = new DateTimeImmutable($argv[1]);
     $endDate = new DateTimeImmutable($argv[2]);
   } catch(Throwable $t) {
-    echo t->message;
+    echo $t->getMessage().PHP_EOL;
+    exit();
   }
 }
 else {
@@ -25,8 +26,8 @@ else {
 $HolidaySeasonStartDate = new DateTimeImmutable("01.04.2020");
 $HolidaySeasonEndDate = new DateTimeImmutable("31.3.2021");
 
-$finnishValidator = new holidayValidator($HolidaySeasonStartDate, $HolidaySeasonEndDate, 50);
-$holidayPlanner = new holidayPlanner($finnishHolidays_2020_2021, $finnishValidator);
+$finnishValidator = new holidayValidator($HolidaySeasonStartDate, $HolidaySeasonEndDate, $finnishHolidays_2020_2021, [7], 50);
+$holidayPlanner = new holidayPlanner($finnishValidator);
 
 try {
   $daysBetween = $holidayPlanner->getHolidaysBetween($startDate, $endDate);
