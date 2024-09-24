@@ -27,12 +27,7 @@ class holidayPlanner {
   }
 
   function getHolidaysBetween(DateTimeImmutable $startDate, DateTimeImmutable $endDate): int {
-    try {
-      $this->validator->validateDays($startDate, $endDate);
-    }
-    catch ( Throwable $t ) {
-      throw $t;
-    }
+    $this->validator->validateDays($startDate, $endDate);
     return $this->holidaysBetween($startDate, $endDate);
   }
 }
